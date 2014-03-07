@@ -1,4 +1,28 @@
 Debater::Application.routes.draw do
+  resources :topics
+
+  get "home/index"
+  devise_for :users
+  
+  devise_scope :user do
+    get "sign_in", :to => "devise/sessions#new"
+    get 'logins/sign_out' => 'devise/sessions#destroy'
+    get 'logins/edit' => 'devise/registrations#edit', :as => 'edit_login_registration'
+    put 'logins' => 'devise/registrations#update', :as => 'login_registration'
+  end
+
+  authenticated :user do
+    devise_scope :user do
+      root :to => 'topics#index', :as => 'profile'
+    end
+  end
+
+  unauthenticated do
+    devise_scope :user do
+      root :to => 'devise/sessions#new', :as => 'authenticted'
+    end
+  end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
