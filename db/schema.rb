@@ -11,7 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140307113102) do
+ActiveRecord::Schema.define(version: 20140307124812) do
+
+  create_table "topic_user_supports", force: true do |t|
+    t.integer  "topic_id"
+    t.integer  "user_id"
+    t.boolean  "support"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "topic_user_supports", ["topic_id", "user_id"], name: "index_topic_user_supports_on_topic_id_and_user_id", using: :btree
 
   create_table "topics", force: true do |t|
     t.text     "question"

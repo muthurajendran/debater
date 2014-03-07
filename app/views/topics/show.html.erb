@@ -1,14 +1,50 @@
-<p id="notice"><%= notice %></p>
+<div class="row">
+   <div class="col-lg-8">
 
-<p>
-  <strong>Question:</strong>
-  <%= @topic.question %>
-</p>
+                <!-- the actual blog post: title/author/date/content -->
+                <h1><%= @topic.question %></h1>
+                <p class="lead">by 
+									<% if @topic.user.nil? %>
+									<%= "Anonymous" %>
+									<% else %>
+									<%= @topic.user.email %>
+									<% end %>
+								
+                </p>
+								<p> <%= @upcount %> debatians are supporting this</p>
+								<p> <%= @downcount %> debatians are against it </p>
+                <hr>
+								<% if @vote.blank? %>
+									<%= link_to "Support it", vote_topic_path(@topic, :support=> "true") , :method => :get, :class =>"btn btn-primary" %>
+									<%= link_to "Against it", vote_topic_path(@topic, :support=> "false") , :method => :get, :class =>"btn btn-danger" %>
+								<% end %>
+									
+                <p>
+                    <span class="glyphicon glyphicon-time"></span> Posted on <%= @topic.created_at %></p>
+                <hr>
+                <!-- the comment box -->
+                <div class="well">
+                    <h4>Leave a Comment:</h4>
+                    <form role="form">
+                        <div class="form-group">
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
 
-<p>
-  <strong>Enable:</strong>
-  <%= @topic.enable %>
-</p>
+                <hr>
 
-<%= link_to 'Edit', edit_topic_path(@topic) %> |
-<%= link_to 'Back', topics_path %>
+                <!-- the comments -->
+                <h3>Start Bootstrap
+                    <small>9:41 PM on August 24, 2013</small>
+                </h3>
+                <p>This has to be the worst blog post I have ever read. It simply makes no sense. You start off by talking about space or something, then you randomly start babbling about cupcakes, and you end off with random fish names.</p>
+
+                <h3>Start Bootstrap
+                    <small>9:47 PM on August 24, 2013</small>
+                </h3>
+                <p>Don't listen to this guy, any blog with the categories 'dinosaurs, spaceships, fried foods, wild animals, alien abductions, business casual, robots, and fireworks' has true potential.</p>
+
+            </div>
+

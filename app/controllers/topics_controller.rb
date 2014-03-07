@@ -1,6 +1,6 @@
 class TopicsController < ApplicationController
   before_action :set_topic, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:show]
 
   # GET /topics
   # GET /topics.json
@@ -11,6 +11,44 @@ class TopicsController < ApplicationController
   # GET /topics/1
   # GET /topics/1.json
   def show
+    @vote =""
+    @upcount = @topic.topic_user_supports.where(:support => true).count
+    @downcount = @topic.topic_user_supports.where(:support => false).count
+    if !current_user.nil?
+      @vote = @topic.topic_user_supports.where(:user_id => current_user.id)
+    end
+  end
+  
+  def vote
+    @topic = Topic.find(params[:id])
+    @check = @topic.topic_user_supports.where(:user_id=>current_user.id)
+    if @check.blank?
+      @vote = TopicUserSupport.new(:user_id => current_user.id, :topic_id=>@topic.id, :support => params[:support])
+      if params[:support]== "true"
+        @cast = "supporting"
+      else
+        @cast = "against"
+      end
+        
+      respond_to do |format|
+        if @vote.save
+          if !current_user.uid.blank?
+            @fb_user = FbGraph::User.me(session[:fb_access_token].strip)
+            @fb_user.feed!(
+              :message => "I'm "+@cast+" a topic! Check it out",
+              :link => "debater.com/topics/"+@topic.id.to_s
+            )
+          end
+          format.html { redirect_to @topic, notice: 'Succesfully voted.' }
+          format.json { render action: 'show', status: :created, location: @topic }
+        else
+          format.html { redirect_to action: 'show' }
+          format.json { render json: @vote.errors, status: :unprocessable_entity }
+        end
+      end
+    else
+      redirect_to action: 'show'
+    end
   end
 
   # GET /topics/new

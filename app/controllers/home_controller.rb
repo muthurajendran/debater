@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
   def index
-    puts "hello world"
+    @topics = Topic.all
   end
 end

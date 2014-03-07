@@ -1,2 +1,19 @@
-<h1>Home#index</h1>
-<p>Find me in app/views/home/index.html.erb</p>
+<h1>Hot Debates</h1>
+
+    <% @topics.each do |topic| %>
+				<div class="well">
+				   <p><%= topic.question %></p>
+					<p> <%= topic.topic_user_supports.where(:support => true).count %> debatians are supporting this</p>
+					<p> <%= topic.topic_user_supports.where(:support => false).count %> debatians are against it </p>
+		       <%= link_to 'Show', topic %>
+		 			<% if !current_user.nil? && current_user == topic.user %>
+		       |<%= link_to 'Edit', edit_topic_path(topic) %>|
+		       <%= link_to 'Destroy', topic, method: :delete, data: { confirm: 'Are you sure?' } %>
+		 			<% end %>
+				</div>
+    <% end %>
+
+
+<br>
+
+<%= link_to 'New Topic', new_topic_path %>

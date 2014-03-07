@@ -35,7 +35,13 @@ end
 gem 'devise'
 
 gem 'omniauth'
-gem 'omniauth-facebook' 
+gem 'omniauth-facebook'
+gem 'fb_graph' 
+
+gem 'bootstrap-sass'
+group :development do
+  gem 'rails_layout'
+end
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'

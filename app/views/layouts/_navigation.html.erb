@@ -1,0 +1,37 @@
+     
+<%# navigation styled for Bootstrap 3.0 %>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#"><%= link_to 'Debater', root_path, class: 'navbar-brand' %></a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        
+			<% if user_signed_in? %>
+			<p class="navbar-text navbar-right">Signed in as <%= current_user.email %></p>
+			<li> <%= link_to "Sign out", destroy_user_session_path, :method => 'delete' %> </li>
+			<% else %>
+			<li><%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook) %></li>
+			<li><%= link_to "Sign in", new_user_session_path %></li>
+			<% end %>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+

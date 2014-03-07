@@ -1,8 +1,17 @@
 Debater::Application.routes.draw do
-  resources :topics
+  resources :topics do
+    member do
+      get "vote"
+    end
+  end
+  
+  resources :home
 
   get "home/index"
-  devise_for :users
+  devise_for :users, :controllers => {
+      omniauth_callbacks: "users/omniauth_callbacks"
+  }
+  
   
   devise_scope :user do
     get "sign_in", :to => "devise/sessions#new"
@@ -11,17 +20,8 @@ Debater::Application.routes.draw do
     put 'logins' => 'devise/registrations#update', :as => 'login_registration'
   end
 
-  authenticated :user do
-    devise_scope :user do
-      root :to => 'topics#index', :as => 'profile'
-    end
-  end
-
-  unauthenticated do
-    devise_scope :user do
-      root :to => 'devise/sessions#new', :as => 'authenticted'
-    end
-  end
+  root :to => 'home#index'
+  
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
