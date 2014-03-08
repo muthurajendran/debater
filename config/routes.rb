@@ -1,11 +1,18 @@
 Debater::Application.routes.draw do
   resources :topics do
+    resources :comments
+    resources :topic_user_supports
     member do
       get "vote"
     end
   end
   
-  resources :home
+    
+  
+  
+  resources :home do
+      get :autocomplete_tag_name, :on => :collection
+  end
 
   get "home/index"
   devise_for :users, :controllers => {
@@ -14,6 +21,8 @@ Debater::Application.routes.draw do
   
   
   devise_scope :user do
+    resources :comments
+    resources :topic_user_supports
     get "sign_in", :to => "devise/sessions#new"
     get 'logins/sign_out' => 'devise/sessions#destroy'
     get 'logins/edit' => 'devise/registrations#edit', :as => 'edit_login_registration'

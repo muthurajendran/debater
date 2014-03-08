@@ -1,0 +1,7 @@
+								
+	                <h5> <% if !comment.user.blank? %>
+										<%= comment.user.email %>
+										<% end %>
+	                    <small><%= comment.created_at %></small>
+	                </h5>
+									<p><%= comment.body %></p>

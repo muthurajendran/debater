@@ -3,6 +3,8 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   
   has_many :topics
+  has_many :comments
+  
   
   has_many :topic_user_supports
   

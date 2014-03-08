@@ -35,5 +35,5 @@ production:
   database: debater_production
   pool: 5
   username: root
-  password: fyogi
-  socket: /tmp/mysql.sock
+  password: muthu
+  socket: /var/run/mysqld/mysqld.sock

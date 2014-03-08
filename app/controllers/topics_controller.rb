@@ -14,8 +14,17 @@ class TopicsController < ApplicationController
     @vote =""
     @upcount = @topic.topic_user_supports.where(:support => true).count
     @downcount = @topic.topic_user_supports.where(:support => false).count
+    @all_users = @topic.topic_user_supports.select(:user_id).where(:support => true).to_a
+    @voters = Array.new
+    @all_users.each do |x|
+      @voters << x.user_id
+    end
+    
+    @support_comments = @topic.comments.where(:user_id => @voters)
+    @against_comments = @topic.comments.where.not(:user_id => @voters)
+    
     if !current_user.nil?
-      @vote = @topic.topic_user_supports.where(:user_id => current_user.id)
+      @vote = @topic.topic_user_supports.where(:user_id => current_user.id).first
     end
   end
   

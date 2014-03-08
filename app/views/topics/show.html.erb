@@ -9,10 +9,20 @@
 									<% else %>
 									<%= @topic.user.email %>
 									<% end %>
-								
                 </p>
 								<p> <%= @upcount %> debatians are supporting this</p>
 								<p> <%= @downcount %> debatians are against it </p>
+								
+								<% if !@vote.blank? %>
+								 <% if @vote.support
+								 			@cas = "supporting"
+							 			else
+											@cas = "against"
+										end
+								 %>
+								<p> You are <%= @cas %> this topic! </p>
+								<% end %>
+							
                 <hr>
 								<% if @vote.blank? %>
 									<%= link_to "Support it", vote_topic_path(@topic, :support=> "true") , :method => :get, :class =>"btn btn-primary" %>
@@ -23,28 +33,144 @@
                     <span class="glyphicon glyphicon-time"></span> Posted on <%= @topic.created_at %></p>
                 <hr>
                 <!-- the comment box -->
-                <div class="well">
+								<div class="col-lg-6">
+                	<!-- the comments -->
+									<h4>Supporters Comments</h4>
+									<hr/>
+									<% @support_comment = @topic.comments.where(:user_id=>@voters) %>
+									<% @support_comment.each do |comment| %>
+	                <h5> <% if !comment.user.blank? %>
+										<%= comment.user.email %>
+										<% end %>
+	                    <small><%= comment.created_at %></small>
+	                </h5>
+									<p><%= comment.body %></p>
+									<% end %>
+									<hr>
+									<% if !@vote.blank? %>
+									<% if @vote.support %>
+                	<div class="well">
+	                	
                     <h4>Leave a Comment:</h4>
-                    <form role="form">
-                        <div class="form-group">
-                            <textarea class="form-control" rows="3"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
+										<%= form_for([@topic, @topic.comments.build]) do |f| %>
+										  <div class="form-group">
+										    <%= f.text_area :body, :class=>"form-control tags", :rows => 3 %>
+										  </div>
+										    <%= f.submit "Comment", :class=>"btn btn-primary" %>
+										<% end %>
+										
+                	</div>
+									<% end %>
+									<% end %>
+                	
 
-                <hr>
+                	
+								</div>
+								
+								<div class="col-lg-6">
+                	
+									<h4>Against Comments</h4>
+									<hr>
+									<% @against_comments.each do |comment| %>
+	                <h5> <% if !comment.user.blank? %>
+										<%= comment.user.email %>
+										<% end %>
+	                    <small><%= comment.created_at %></small>
+	                </h5>
+									<p><%= comment.body %></p>
+									<% end %>
+									<hr>
+									<% if !@vote.blank? %>
+									<% if !@vote.support %>
+                	<div class="well">
+                    <h4>Leave a Comment:</h4>
+										<%= form_for([@topic, @topic.comments.build]) do |f| %>
+										  <div class="form-group">
+										    <%= f.text_area :body, :class=>"form-control", :rows => 3 %>
+										  </div>
+										    <%= f.submit "Comment", :class=>"btn btn-primary" %>
+										<% end %>
+										
+                	</div>
+									<% end %>
+									<% end %>
+                	
+								</div>
+									
+										
+ </div>
+ 
+ <script type="text/javascript">
+ var availableTags = [
+     "ActionScript",
+     "AppleScript",
+     "Asp",
+     "BASIC",
+     "C",
+     "C++",
+     "Clojure",
+     "COBOL",
+     "ColdFusion",
+     "Erlang",
+     "Fortran",
+     "Groovy",
+     "Haskell",
+     "Java",
+     "JavaScript",
+     "Lisp",
+     "Perl",
+     "PHP",
+     "Python",
+     "Ruby",
+     "Scala",
+     "Scheme"
+     ];
 
-                <!-- the comments -->
-                <h3>Start Bootstrap
-                    <small>9:41 PM on August 24, 2013</small>
-                </h3>
-                <p>This has to be the worst blog post I have ever read. It simply makes no sense. You start off by talking about space or something, then you randomly start babbling about cupcakes, and you end off with random fish names.</p>
+ function split(val) {
+     return val.split(/@\s*/);
+ }
 
-                <h3>Start Bootstrap
-                    <small>9:47 PM on August 24, 2013</small>
-                </h3>
-                <p>Don't listen to this guy, any blog with the categories 'dinosaurs, spaceships, fried foods, wild animals, alien abductions, business casual, robots, and fireworks' has true potential.</p>
+ function extractLast(term) {
+     return split(term).pop();
+ }
 
-            </div>
+ $(".tags")
+ // don't navigate away from the field on tab when selecting an item
+ .bind("keydown", function(event) {
+     if (event.keyCode === $.ui.keyCode.TAB && $(this).data("autocomplete").menu.active) {
+         event.preventDefault();
+     }
+ }).autocomplete({
+     minLength: 0,
+     source: function(request, response) {
+         var term = request.term,
+             results = [];
+         if (term.indexOf("@") >= 0) {
+             term = extractLast(request.term);
+             if (term.length > 0) {
+                 results = $.ui.autocomplete.filter(
+                 availableTags, term);
+             } else {
+                 results = ['Start typing...'];
+             }
+         }
+         response(results);
+     },
+     focus: function() {
+         // prevent value inserted on focus
+         return false;
+     },
+     select: function(event, ui) {
+         var terms = split(this.value);
+         // remove the current input
+         terms.pop();
+         // add the selected item
+         terms.push(ui.item.value);
+         // add placeholder to get the comma-and-space at the end
+         terms.push("");
+         this.value = terms.join("");
+         return false;
+     }
+ });
+ </script>
 
