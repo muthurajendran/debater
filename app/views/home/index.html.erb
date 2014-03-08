@@ -2,13 +2,18 @@
 
     <% @topics.each do |topic| %>
 				<div class="well">
-				   <p><%= topic.question %></p>
-					<p> <%= topic.topic_user_supports.where(:support => true).count %> debatians are supporting this</p>
-					<p> <%= topic.topic_user_supports.where(:support => false).count %> debatians are against it </p>
-		       <%= link_to 'Show', topic %>
+				   <p><%= topic.question %> <small>
+						 <% if topic.user.blank? %>
+						 <%= "By Anonymous" %>
+						 <% else %>
+						 <%= "by "+topic.user.email %>
+						 <% end %>
+					 </small></p>
+					<p> <%= topic.topic_user_supports.where(:support => true).count %> debatians are supporting this | <%= topic.topic_user_supports.where(:support => false).count %> debatians are against it </p>
+		      <p> <%= link_to 'Show', topic %>
 		 			<% if !current_user.nil? && current_user == topic.user %>
 		       |<%= link_to 'Edit', edit_topic_path(topic) %>|
-		       <%= link_to 'Destroy', topic, method: :delete, data: { confirm: 'Are you sure?' } %>
+		       <%= link_to 'Destroy', topic, method: :delete, data: { confirm: 'Are you sure?' } %> </p>
 		 			<% end %>
 				</div>
     <% end %>
