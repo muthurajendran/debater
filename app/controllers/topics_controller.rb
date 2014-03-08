@@ -45,7 +45,7 @@ class TopicsController < ApplicationController
             @fb_user = FbGraph::User.me(session[:fb_access_token].strip)
             @fb_user.feed!(
               :message => "I'm "+@cast+" a topic! Check it out",
-              :link => "debater.com/topics/"+@topic.id.to_s
+              :link => "ec2-54-80-154-0.compute-1.amazonaws.com/topics/"+@topic.id.to_s
             )
           end
           format.html { redirect_to @topic, notice: 'Succesfully voted.' }
